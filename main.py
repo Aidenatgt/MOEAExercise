@@ -1,14 +1,19 @@
 import random
 import matplotlib.pyplot as plt
 
-trials: list[tuple[int, int, int, int, int]] = []
+from mouse_fitness import MouseFitness
 
-def domination_table(trials: list[tuple[int, int, int, int, int]]) -> list[list[int]]:
+trials: list[MouseFitness] = []
+
+
+def domination_table(trials: list[MouseFitness]) -> list[list[int]]:
+    pass
+
 
 def main():
     for i in range(10):
         trials.append(
-            (
+            MouseFitness(
                 random.randint(1, 10),
                 random.randint(1, 10),
                 random.randint(1, 10),
@@ -16,8 +21,9 @@ def main():
                 random.randint(1, 10),
             )
         )
+    print("Trial\tPrice\tCord Length\tDPI\tErgonomics\tClick Quality")
     for trial in range(len(trials)):
-        print(f"Trial: {trial} - {trials[trial]}")
+        print(f"{trial}\t{trials[trial].row_str()}")
 
 
 if __name__ == "__main__":
