@@ -38,3 +38,24 @@ class MouseFitness:
 
     def row_str(self) -> str:
         return f"{self.price}\t{self.cord_length}\t\t{self.dpi}\t{self.ergonomics}\t\t{self.click_quality}"
+
+
+class MultiObjectiveMouseFitness:
+    def __init__(
+        self,
+        qualities: list[int],
+    ):
+
+        self.qualities: list[int] = qualities
+
+    def dominates(self, other: MultiObjectiveMouseFitness) -> bool:
+        return all(
+            self_quality >= other_quality
+            for self_quality, other_quality in zip(self.qualities, other.qualities)
+        ) and any(
+            self_quality > other_quality
+            for self_quality, other_quality in zip(self.qualities, other.qualities)
+        )
+
+    def __str__(self) -> str:
+        return "\t".join(f"{quality}" for i, quality in enumerate(self.qualities))

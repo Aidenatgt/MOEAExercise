@@ -1,13 +1,13 @@
 import random
 import matplotlib.pyplot as plt
 
-from mouse_fitness import MouseFitness
+from mouse_fitness import MouseFitness, MultiObjectiveMouseFitness
 from digraph import Digraph
 
-trials: list[MouseFitness] = []
+trials: list[MultiObjectiveMouseFitness] = []
 
 
-def construct_digraph(trials: list[MouseFitness]) -> Digraph:
+def construct_digraph(trials: list[MultiObjectiveMouseFitness]) -> Digraph:
     graph = Digraph([f"Trial {i}" for i in range(len(trials))])
 
     for trial_num in range(len(trials)):
@@ -19,7 +19,7 @@ def construct_digraph(trials: list[MouseFitness]) -> Digraph:
     return graph
 
 
-def domination_table(trials: list[MouseFitness]) -> list[list[int]]:
+def domination_table(trials: list[MultiObjectiveMouseFitness]) -> list[list[int]]:
     result: list[list[int]] = [[] for _ in range(len(trials))]
     for trial_num in range(len(trials)):
         for other_trial_num in range(len(trials)):
@@ -32,23 +32,20 @@ def domination_table(trials: list[MouseFitness]) -> list[list[int]]:
 def main():
     for i in range(10):
         trials.append(
-            MouseFitness(
-                random.randint(1, 10),
-                random.randint(1, 10),
-                random.randint(1, 10),
-                random.randint(1, 10),
-                random.randint(1, 10),
-            )
+            MultiObjectiveMouseFitness([random.randint(1, 10) for _ in range(2)])
         )
-    print("Trial\tPrice\tCord Length\tDPI\tErgonomics\tClick Quality")
-    for trial in range(len(trials)):
-        print(f"{trial}\t{trials[trial].row_str()}")
 
-    domination_results = domination_table(trials)
-    for trial_num, dominated_trials in enumerate(domination_results):
-        print(f"Trial {trial_num} dominates trials: {dominated_trials}")
+    for _ in range(4):
+        for trial_num, trial in enumerate(trials):
+            print(f"Trial {trial_num}: {trial}")
+        domination_results = domination_table(trials)
+        for trial_num, dominated_trials in enumerate(domination_results):
+            print(f"Trial {trial_num} dominates trials: {dominated_trials}")
+        print("\n")
 
-    construct_digraph(trials).render()
+        construct_digraph(trials).render()
+        for trial in trials:
+            trial.qualities.append(random.randint(1, 10))
 
 
 if __name__ == "__main__":
